@@ -47,47 +47,4 @@ int chmod(char *pathname, int mode)
 	    "syscall");
 }
 
-
-int fchmod(int a, mode_t b)
-{
-	asm("lea_rdi,[rsp+DWORD] %16"
-	    "mov_rdi,[rdi]"
-	    "lea_rsi,[rsp+DWORD] %8"
-	    "mov_rsi,[rsi]"
-	    "mov_rax, %91"
-	    "syscall");
-}
-
-
-int mkdir(char const* a, mode_t b)
-{
-	asm("lea_rdi,[rsp+DWORD] %16"
-	    "mov_rdi,[rdi]"
-	    "lea_rsi,[rsp+DWORD] %8"
-	    "mov_rsi,[rsi]"
-	    "mov_rax, %83"
-	    "syscall");
-}
-
-
-int mknod(char const* a, mode_t b, dev_t c)
-{
-	asm("lea_rdi,[rsp+DWORD] %24"
-	    "mov_rdi,[rdi]"
-	    "lea_rsi,[rsp+DWORD] %16"
-	    "mov_rsi,[rsi]"
-	    "lea_rdx,[rsp+DWORD] %8"
-	    "mov_rdx,[rdx]"
-	    "mov_rax, %133"
-	    "syscall");
-}
-
-
-mode_t umask(mode_t m)
-{
-	asm("lea_rdi,[rsp+DWORD] %8"
-	    "mov_rdi,[rdi]"
-	    "mov_rax, %95"
-	    "syscall");
-}
 #endif

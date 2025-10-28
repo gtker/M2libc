@@ -46,48 +46,4 @@ int chmod(char *pathname, int mode)
 	    "!0 R0 LOAD32 R0 MEMORY"
 	    "SYSCALL_ALWAYS");
 }
-
-
-int fchmod(int a, mode_t b)
-{
-	asm("!94 R7 LOADI8_ALWAYS"
-	    "!8 R1 SUB R12 ARITH_ALWAYS"
-	    "!0 R1 LOAD32 R1 MEMORY"
-	    "!4 R0 SUB R12 ARITH_ALWAYS"
-	    "!0 R0 LOAD32 R0 MEMORY"
-	    "SYSCALL_ALWAYS");
-}
-
-
-int mkdir(char const* a, mode_t b)
-{
-	asm("!39 R7 LOADI8_ALWAYS"
-	    "!8 R1 SUB R12 ARITH_ALWAYS"
-	    "!0 R1 LOAD32 R1 MEMORY"
-	    "!4 R0 SUB R12 ARITH_ALWAYS"
-	    "!0 R0 LOAD32 R0 MEMORY"
-	    "SYSCALL_ALWAYS");
-}
-
-
-int mknod(char const* a, mode_t b, dev_t c)
-{
-	asm("!14 R7 LOADI8_ALWAYS"
-	    "!12 R2 SUB R12 ARITH_ALWAYS"
-	    "!0 R2 LOAD32 R2 MEMORY"
-	    "!8 R1 SUB R12 ARITH_ALWAYS"
-	    "!0 R1 LOAD32 R1 MEMORY"
-	    "!4 R0 SUB R12 ARITH_ALWAYS"
-	    "!0 R0 LOAD32 R0 MEMORY"
-	    "SYSCALL_ALWAYS");
-}
-
-
-mode_t umask(mode_t m)
-{
-	asm("!60 R7 LOADI8_ALWAYS"
-	    "!4 R0 SUB R12 ARITH_ALWAYS"
-	    "!0 R0 LOAD32 R0 MEMORY"
-	    "SYSCALL_ALWAYS");
-}
 #endif

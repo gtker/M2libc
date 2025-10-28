@@ -47,48 +47,4 @@ int chmod(char *pathname, int mode)
 	    "int !0x80");
 }
 
-
-int fchmod(int a, mode_t b)
-{
-	asm("lea_ebx,[esp+DWORD] %8"
-	    "mov_ebx,[ebx]"
-	    "lea_ecx,[esp+DWORD] %4"
-	    "mov_ecx,[ecx]"
-	    "mov_eax, %94"
-	    "int !0x80");
-}
-
-
-int mkdir(char const* a, mode_t b)
-{
-	asm("lea_ebx,[esp+DWORD] %8"
-	    "mov_ebx,[ebx]"
-	    "lea_ecx,[esp+DWORD] %4"
-	    "mov_ecx,[ecx]"
-	    "mov_eax, %39"
-	    "int !0x80");
-}
-
-
-int mknod(char const* a, mode_t b, dev_t c)
-{
-	asm("lea_ebx,[esp+DWORD] %12"
-	    "mov_ebx,[ebx]"
-	    "lea_ecx,[esp+DWORD] %8"
-	    "mov_ecx,[ecx]"
-	    "lea_edx,[esp+DWORD] %4"
-	    "mov_edx,[edx]"
-	    "mov_eax, %14"
-	    "int !0x80");
-}
-
-
-mode_t umask(mode_t m)
-{
-	asm("lea_ebx,[esp+DWORD] %4"
-	    "mov_ebx,[ebx]"
-	    "mov_eax, %60"
-	    "int !0x80");
-}
-
 #endif
