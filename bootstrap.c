@@ -41,37 +41,8 @@ enum
 	FALSE = 0,
 };
 
-void* malloc(int size);
-
-
-char* __fputc_buffer;
-int fgetc(FILE* f)
-{
-	/* We don't have operator & */
-	if(__fputc_buffer == NULL) {
-		__fputc_buffer = malloc(1);
-	}
-
-	if(read(f, __fputc_buffer, 1) <= 0) {
-		return EOF;
-	}
-
-	return __fputc_buffer[0];
-}
-
 unsigned fread(char* buffer, unsigned size, unsigned count, FILE* f) {
 	return read(f, buffer, size * count);
-}
-
-void fputc(char s, FILE* f)
-{
-	/* We don't have operator & */
-	if(__fputc_buffer == NULL) {
-		__fputc_buffer = malloc(1);
-	}
-	__fputc_buffer[0] = s;
-
-	write(f, __fputc_buffer, 1);
 }
 
 unsigned fwrite(char* buffer, unsigned size, unsigned count, FILE* f) {
@@ -108,28 +79,6 @@ int fclose(FILE* stream)
 	return error;
 }
 
-long _malloc_ptr;
-long _brk_ptr;
-
-void* malloc(int size)
-{
-	if(NULL == _brk_ptr)
-	{
-		_brk_ptr = brk(0);
-		_malloc_ptr = _brk_ptr;
-	}
-
-	if(_brk_ptr < _malloc_ptr + size)
-	{
-		_brk_ptr = brk(_malloc_ptr + size);
-		if(-1 == _brk_ptr) return 0;
-	}
-
-	long old_malloc = _malloc_ptr;
-	_malloc_ptr = _malloc_ptr + size;
-	return old_malloc;
-}
-
 int strlen(char* str )
 {
 	int i = 0;
@@ -140,16 +89,6 @@ int strlen(char* str )
 void fputs(char* s, FILE* f)
 {
 	write(f, s, strlen(s));
-}
-
-void* memset(void* ptr, int value, int num)
-{
-	char* s;
-	for(s = ptr; 0 < num; num = num - 1)
-	{
-		s[0] = value;
-		s = s + 1;
-	}
 }
 
 /* The real memcpy has void* parameters and return types, but
@@ -182,18 +121,6 @@ int strcmp(char* lhs, char* rhs)
 	return lhs[i] - rhs[i];
 }
 
-char* strchr(char* str, int ch)
-{
-	char* p = str;
-	while(ch != p[0])
-	{
-		if(0 == p[0]) return NULL;
-		p = p + 1;
-	}
-	if(0 == p[0]) return NULL;
-	return p;
-}
-
 int isspace(int c) {
 	return c == ' ' || c == '\n' || c == '\t';
 }
@@ -211,56 +138,28 @@ int isalnum(int c) {
 	return isalpha(c) || isdigit(c);
 }
 
-int atoi(char* str)
-{
-	while(isspace(str[0]))
-	{
-		str = str + 1;
-	}
-
-	int negative = 0;
-	if (str[0] == '-') {
-		negative = 1;
-	}
-	if (str[0] == '+') {
-		str = str + 1;
-	}
-
-	int value = 0;
-	while(isdigit(str[0]))
-	{
-		value = 10 * value - (str[0] - '0');
-		str = str + 1;
-	}
-
-	if(negative == 1)
-	{
-		return value;
-	}
-	else
-	{
-		return -value;
-	}
-}
-
+char* __MALLOC_PTR;
+char* __BRK_PTR;
 void* calloc(int count, int size)
 {
-	void* ret = malloc(count * size);
-	if(NULL == ret) return NULL;
-	memset(ret, 0, (count * size));
-	return ret;
-}
-
-void assert(int condition) {
-	if(!condition) {
-		fputs("M2libc assertion failed\n", stderr);
-		exit(EXIT_FAILURE);
+	size = size * count;
+	if(__BRK_PTR == 0) {
+		__BRK_PTR = brk(0);
+		__MALLOC_PTR = __BRK_PTR;
 	}
-}
 
-void free(void* l)
-{
-	return;
+	if (size % sizeof(int) != 0) {
+		size = size + sizeof(int) - (size % sizeof(int));
+	}
+
+	if((__MALLOC_PTR + size) >__BRK_PTR) {
+		__BRK_PTR = brk(__MALLOC_PTR + 262144 - (size % 262144));
+		if(__BRK_PTR == -1) return 0;
+	}
+
+	char* ptr = __MALLOC_PTR;
+	__MALLOC_PTR = __MALLOC_PTR + size;
+	return ptr;
 }
 
 int abs(int n) {
