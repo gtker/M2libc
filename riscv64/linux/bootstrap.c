@@ -51,9 +51,9 @@ int close(int fd)
 
 int brk(void *addr)
 {
-	asm("rd_a0 rs1_fp !-8 ld"
-	    "rd_a7 !214 addi"   /* brk */
-	    "ecall");
+       asm("rd_a0 rs1_fp !-8 ld"
+           "rd_a7 !214 addi"   /* brk */
+           "ecall");
 }
 
 void exit(int value)
