@@ -46,44 +46,4 @@ int chmod(char *pathname, int mode)
 	    "rd_a7 !53 addi"
 	    "ecall");
 }
-
-
-int fchmod(int a, mode_t b)
-{
-        asm("rd_a0 !-100 addi" /* AT_FDCWD */
-	    "rd_a1 rs1_fp !-4 lw"
-	    "rd_a2 rs1_fp !-8 lw"
-	    "rd_a7 !52 addi"
-	    "ecall");
-}
-
-
-int mkdir(char const* a, mode_t b)
-{
-        asm("rd_a0 !-100 addi" /* AT_FDCWD */
-	    "rd_a1 rs1_fp !-4 lw"
-	    "rd_a2 rs1_fp !-8 lw"
-	    "rd_a7 !34 addi"
-	    "ecall");
-}
-
-
-int mknod(char const* a, mode_t b, dev_t c)
-{
-        asm("rd_a0 !-100 addi" /* AT_FDCWD */
-	    "rd_a1 rs1_fp !-4 lw"
-	    "rd_a2 rs1_fp !-8 lw"
-	    "rd_a3 rs1_fp !-12 lw"
-	    "rd_a7 !33 addi"
-	    "ecall");
-}
-
-
-mode_t umask(mode_t m)
-{
-	asm("rd_a0 rs1_fp !-4 lw"
-	    "rd_a7 !166 addi"
-	    "ecall");
-}
-
 #endif
